@@ -262,7 +262,7 @@ With this endpoint, the ride owner can accept or reject a ride request
 ```json
 {
   "status": "success",
-  "message": "The ride request has been successfully `requestStatus`"
+  "message": "The ride request has been successfully <requestStatus>"
 }
 ```
 
