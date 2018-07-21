@@ -1,169 +1,298 @@
-# Introduction
+# Overview - RideMyWay API
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Ride-My-Way API documentation: You can use the API to access Ride My Way API endpoints, which can signup new users, sigin registered users, create a ride offer, request to join a ride offer, and respond to to a ride request.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+This is a node/express application
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+`BASE API URL:` `https://emmaadesile-ridemyway.herokuapp.com`
 
-# Authentication
+This API supports CRUD operations: `POST`, `GET`, `PUT`, and `DELETE`
 
-> To authorize, use this code:
+# Requests
 
-```ruby
-require 'kittn'
+An authorisation token is required to access all endpoints except `signup` and `signin` endpoints. You need to sign up, then login to get a token.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+The token is passed in `req.headers`
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```bash
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`token`: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzIxMzA1NjIsImV4cCI6MTUzMjIxNjk2Mn0.dfDX0b5Z172HvizzxPlafsVpqd_KjhKjMRpzifctlIQ`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzIxMzA1NjIsImV4cCI6MTUzMjIxNjk2Mn0.dfDX0b5Z172HvizzxPlafsVpqd_KjhKjMRpzifctlIQ</code> with your auth token.
 </aside>
 
-# Kittens
 
-## Get All Kittens
+# Users
 
-```ruby
-require 'kittn'
+## User signup
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+Creates a new user
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```bash
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```bash
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> Request Body
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "firstname": "John",
+  "lastname": "Snow",
+  "username": "johnsnow",
+  "email": "johnsnow@gmail.com",
+  "password": "gameofthrones",
+  "confirmPassword": "gameofthrones"
+}
+```
+> Response Body
+
+```json
+{
+  "status": "success",
+  "message": "Signup successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzIxMzA1NjIsImV4cCI6MTUzMjIxNjk2Mn0.dfDX0b5Z172HvizzxPlafsVpqd_KjhKjMRpzifctlIQ"
 }
 ```
 
-This endpoint retrieves a specific kitten.
+### HTTP Request
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+- Endpoint: `/auth/signup`
+- Verb: `POST`
+- Body: `application/x-www-form-urlencoded`
+
+### HTTP Response
+
+- Status: `201 - created`
+- Body: `application/json`
+
+
+## User signin
+
+Signs in a registered user
+
+> Request Body
+
+```json
+{
+  "email": "johnsnow@gmail.com",
+  "password": "gameofthrones",
+}
+```
+> Response Body
+
+```json
+{
+  "status": "success",
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzIxMzA1NjIsImV4cCI6MTUzMjIxNjk2Mn0.dfDX0b5Z172HvizzxPlafsVpqd_KjhKjMRpzifctlIQ"
+}
+```
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+- Endpoint: `/auth/signin`
+- Verb: `POST`
+- Body: `application/x-www-form-urlencoded`
 
-### URL Parameters
+### HTTP Response
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+- Status: `200`
+- Body: `application/json`
+
+
+# Rides
+
+## Get all ride offers
+
+This endpoint gets all available ride offers
+
+> Response Body
+
+```json
+{
+    "status": "Success",
+    "rides": [
+        {
+            "ride_id": 1,
+            "user_id": 2,
+            "location": "Ikoyi",
+            "destination": "Ajah",
+            "departuretime": "19:00:00",
+            "datecreated": "2018-07-14T23:00:00.000Z",
+            "seatsavailable": 8
+        },
+        {
+            "ride_id": 2,
+            "user_id": 1,
+            "location": "Ikorodu",
+            "destination": "Maryland",
+            "departuretime": "07:00:00",
+            "datecreated": "2018-07-20T23:00:00.000Z",
+            "seatsavailable": 5
+        },
+        {
+            "ride_id": 3,
+            "user_id": 1,
+            "location": "CMS",
+            "destination": "Ikeja",
+            "departuretime": "13:00:00",
+            "datecreated": "2018-07-20T23:00:00.000Z",
+            "seatsavailable": 10
+        }
+    ]
+}
+```
+
+### HTTP Request
+
+- Endpoint: `/rides`
+- Verb: `GET`
+
+### HTTP Response
+
+- Status: `/rides`
+- Body: `application/json`
+
+
+## Get a ride
+
+This endpoint get a specific ride
+
+> Response Body
+
+```json
+{
+    "status": "Success",
+    "ride": [
+        {
+            "ride_id": 1,
+            "user_id": 2,
+            "location": "Ikoyi",
+            "destination": "Ajah",
+            "departuretime": "19:00:00",
+            "datecreated": "2018-07-14T23:00:00.000Z",
+            "seatsavailable": 8
+        }
+    ]
+}
+
+```
+
+### HTTP Request
+
+- Endpoint: `/rides/:rideId`
+- Verb: `GET`
+
+### HTTP Response
+
+- Status: `200 - ok`
+- Body: `application/json`
+
+
+## Create a ride
+
+This endpoint create a ride offer
+
+> Request Body
+
+```json
+{
+  "location": "Yaba",
+  "destination": "Ikeja",
+  "departuretime": "13:00",
+  "datecreated": "2018-07-20",
+  "seatsavailable": "10",
+
+}
+```
+
+> Response Body
+
+```
+{
+    "status": "Success",
+    "message": "Ride offer successfully created"
+}
+```
+
+### HTTP Request
+
+- Endpoint: `/users/rides`
+- Verb: `POST`
+
+### HTTP Response
+
+- Status: `201 - created`
+- Body: `application/json`
+
+
+## Request to join a ride
+
+This endpoint sends a request to join a ride offer
+
+> Response Body
+
+```json
+{
+    "status": "Success",
+    "message": "Request to join ride offer pending approval from ride owner"
+}
+```
+
+### HTTP Request
+
+- Endpoint: `/rides/:rideId/requests`
+- Verb: `POST`
+
+### HTTP Response
+
+- Status: `201 `
+- Body: `application/json`
+
+
+## Accept or Reject a ride offer
+
+With this endpoint, the ride owner can accept or reject a ride request
+
+> Request Body
+
+```json
+{
+  "requestStatus": "accepted"
+}
+```
+
+> Response Body
+
+```json
+{
+  "status": "success",
+  "message": "The ride request has been successfully `requestStatus`"
+}
+```
+
+### HTTP Request
+
+- Endpoint: `/users/rides/:rideId/requests/:requestId`
+- Verb: `PUT`
+
+### HTTP Response
+
+- Status: `200 - ok `
+- Body: `application/json`
+
+## Get all ride requests
+
+This endpoint gets all the requests for a ride
+
+> Response Body
+
+```json
+{
+  "user_id": 2,
+  "ride_id": 1,
+  "request_id": 2,
+  "request_status": "pending",
+  "requester_name": "John Snow"
+}
+```
+
+### HTTP Response
+
+- Status: `200 - ok `
+- Body: `application/json`
